@@ -1,0 +1,409 @@
+{
+    "imports": [
+        "github.com/project-flogo/flow",
+        "git.tibco.com/git/product/flogo-messaging.git/Messaging/activity/tcmpublisher",
+        "github.com/project-flogo/contrib/activity/log",
+        "git.tibco.com/git/product/ipaas/wi-mqtt.git/Mqtt/trigger/subscribe",
+        "github.com/project-flogo/contrib/function/coerce",
+        "git.tibco.com/git/product/flogo-messaging.git/Messaging/connector/tcm"
+    ],
+    "name": "MQTT-to-TCM-Bridge",
+    "description": "",
+    "version": "1.0.0",
+    "type": "flogo:app",
+    "appModel": "1.1.1",
+    "feVersion": "2.9.0",
+    "triggers": [
+        {
+            "ref": "#subscribe",
+            "name": "mqtt-trigger",
+            "description": "Subscribe to an MQTT topic",
+            "settings": {
+                "mqttConnection": {
+                    "id": "19b7a460-bd8f-11ea-b857-510c465aae21",
+                    "type": "flogo:connector",
+                    "version": "1.1.0",
+                    "name": "connection",
+                    "hashTags": [],
+                    "inputMappings": {},
+                    "outputMappings": {},
+                    "iteratorMappings": {},
+                    "title": "MQTT Connector",
+                    "description": "MQTT Connector",
+                    "ref": "git.tibco.com/git/product/ipaas/wi-mqtt.git/Mqtt/connector/connection",
+                    "settings": [
+                        {
+                            "name": "name",
+                            "type": "string",
+                            "required": true,
+                            "display": {
+                                "name": "Connection Name",
+                                "visible": true
+                            },
+                            "value": "local-mqtt"
+                        },
+                        {
+                            "name": "description",
+                            "type": "string",
+                            "display": {
+                                "name": "Description",
+                                "visible": true
+                            },
+                            "value": ""
+                        },
+                        {
+                            "name": "broker",
+                            "type": "string",
+                            "required": true,
+                            "display": {
+                                "name": "Broker URL",
+                                "visible": true,
+                                "appPropertySupport": true,
+                                "Description": "Enter a broker URL in the form '<protocol>://<host>:<port>'"
+                            },
+                            "value": "=$property[\"Mqtt.local-mqtt.Broker_URL\"]"
+                        },
+                        {
+                            "name": "user",
+                            "type": "string",
+                            "required": false,
+                            "display": {
+                                "name": "Username",
+                                "visible": true,
+                                "Description": "Enter a username if this connection requires one",
+                                "appPropertySupport": true
+                            },
+                            "value": "=$property[\"Mqtt.local-mqtt.Username\"]"
+                        },
+                        {
+                            "name": "password",
+                            "type": "string",
+                            "required": false,
+                            "display": {
+                                "name": "Password",
+                                "visible": true,
+                                "type": "password",
+                                "encryptable": true,
+                                "Description": "Enter a password if this connection requires one",
+                                "appPropertySupport": true
+                            },
+                            "value": "=$property[\"Mqtt.local-mqtt.Password\"]"
+                        },
+                        {
+                            "name": "encryptionMode",
+                            "type": "string",
+                            "display": {
+                                "name": "Encryption Mode",
+                                "description": "Choose the type of authentication to use",
+                                "appPropertySupport": true
+                            },
+                            "allowed": [
+                                "None",
+                                "TLS-Cert",
+                                "TLS-ClientAuth"
+                            ],
+                            "value": "=$property[\"Mqtt.local-mqtt.Encryption_Mode\"]"
+                        },
+                        {
+                            "name": "cacert",
+                            "type": "string",
+                            "required": false,
+                            "display": {
+                                "name": "Cacert",
+                                "description": "Select the CA certificate file used to sign the broker's certificate",
+                                "visible": false,
+                                "type": "fileselector",
+                                "fileExtensions": [
+                                    ".crt",
+                                    ".cert",
+                                    ".pem"
+                                ],
+                                "appPropertySupport": true,
+                                "readonly": false,
+                                "valid": true
+                            },
+                            "value": ""
+                        },
+                        {
+                            "name": "clientcert",
+                            "type": "string",
+                            "required": false,
+                            "display": {
+                                "name": "Client Cert",
+                                "description": "Select the client certificate file for connections requiring client auth",
+                                "visible": false,
+                                "type": "fileselector",
+                                "fileExtensions": [
+                                    ".crt",
+                                    ".cert",
+                                    ".pem"
+                                ],
+                                "appPropertySupport": true,
+                                "readonly": false,
+                                "valid": true
+                            },
+                            "value": ""
+                        },
+                        {
+                            "name": "clientkey",
+                            "type": "string",
+                            "required": false,
+                            "display": {
+                                "name": "Client Key",
+                                "description": "Select the client key file used for connections requiring client auth",
+                                "visible": false,
+                                "type": "fileselector",
+                                "fileExtensions": [
+                                    ".key",
+                                    ".pem"
+                                ],
+                                "appPropertySupport": true,
+                                "readonly": false,
+                                "valid": true
+                            },
+                            "value": ""
+                        }
+                    ],
+                    "outputs": [],
+                    "inputs": [],
+                    "handler": {
+                        "settings": []
+                    },
+                    "reply": [],
+                    "s3Prefix": "Tibco",
+                    "key": "Tibco/Mqtt/connector/connection/connector.json",
+                    "display": {
+                        "description": "MQTT Connector",
+                        "category": "Mqtt",
+                        "smallIcon": "icons/mqtt.png",
+                        "largeIcon": "icons/mqtt.png",
+                        "visible": true
+                    },
+                    "actions": [
+                        {
+                            "name": "Save"
+                        }
+                    ],
+                    "feature": {},
+                    "loopType": "none",
+                    "loopSettings": [],
+                    "retrySettings": [],
+                    "propertyMap": {},
+                    "keyfield": "name",
+                    "schemaMap": {},
+                    "iteratorAccumulate": false,
+                    "isValid": true,
+                    "lastUpdatedTime": 1593823591003,
+                    "user": "flogo",
+                    "connectorName": "local-mqtt",
+                    "connectorDescription": " "
+                }
+            },
+            "id": "MQTTSubscriber",
+            "handlers": [
+                {
+                    "description": "",
+                    "settings": {
+                        "topic": "/feeds/temp",
+                        "qos": 2,
+                        "valueType": "JSON",
+                        "showwill": false,
+                        "will": "",
+                        "willtopic": "",
+                        "willqos": 0,
+                        "willretain": false
+                    },
+                    "action": {
+                        "ref": "github.com/project-flogo/flow",
+                        "settings": {
+                            "flowURI": "res://flow:Bridge"
+                        },
+                        "input": {
+                            "jsonValue": {
+                                "mapping": {
+                                    "temp": "=$.jsonValue.temp"
+                                }
+                            }
+                        }
+                    },
+                    "schemas": {
+                        "output": {
+                            "jsonValue": {
+                                "type": "json",
+                                "value": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"temp\":{\"type\":\"number\"}}}",
+                                "fe_metadata": "{\"temp\":0}"
+                            }
+                        }
+                    },
+                    "name": "Bridge"
+                }
+            ]
+        }
+    ],
+    "resources": [
+        {
+            "id": "flow:Bridge",
+            "data": {
+                "name": "Bridge",
+                "description": "",
+                "links": [
+                    {
+                        "id": 1,
+                        "from": "TCMMessagePublisher",
+                        "to": "Log",
+                        "type": "default"
+                    }
+                ],
+                "tasks": [
+                    {
+                        "id": "TCMMessagePublisher",
+                        "name": "TCMMessagePublisher",
+                        "description": "This activity sends a message to TIBCO Cloud Messaging service",
+                        "settings": {
+                            "retryOnError": {
+                                "count": 0,
+                                "interval": 0
+                            }
+                        },
+                        "activity": {
+                            "ref": "#tcmpublisher",
+                            "input": {
+                                "tcmConnection": "conn://29835fb0-bd8f-11ea-b857-510c465aae21",
+                                "destination": "temp",
+                                "url": "",
+                                "authKey": "",
+                                "message": {
+                                    "mapping": {
+                                        "temp": "=$flow.jsonValue.temp"
+                                    }
+                                }
+                            },
+                            "schemas": {
+                                "input": {
+                                    "message": {
+                                        "type": "json",
+                                        "value": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"temp\":{\"type\":\"number\"}}}",
+                                        "fe_metadata": "{\"temp\":0}"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "id": "Log",
+                        "name": "Log",
+                        "description": "Logs a message",
+                        "activity": {
+                            "ref": "#log",
+                            "input": {
+                                "message": "=coerce.toString($flow.jsonValue)",
+                                "addDetails": false
+                            }
+                        }
+                    }
+                ],
+                "metadata": {
+                    "input": [
+                        {
+                            "name": "topic",
+                            "type": "string"
+                        },
+                        {
+                            "name": "retained",
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "qos",
+                            "type": "integer"
+                        },
+                        {
+                            "name": "duplicate",
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "messageID",
+                            "type": "integer"
+                        },
+                        {
+                            "name": "jsonValue",
+                            "type": "object",
+                            "schema": {
+                                "type": "json",
+                                "value": "{\"temp\":{\"type\":\"number\"}}"
+                            }
+                        }
+                    ],
+                    "output": [],
+                    "fe_metadata": {
+                        "input": "{\"type\":\"object\",\"title\":\"MQTTSubscriber\",\"properties\":{\"topic\":{\"type\":\"string\",\"required\":false},\"retained\":{\"type\":\"boolean\",\"required\":false},\"qos\":{\"type\":\"integer\",\"required\":false},\"duplicate\":{\"type\":\"boolean\",\"required\":false},\"messageID\":{\"type\":\"integer\",\"required\":false},\"jsonValue\":{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"temp\":{\"type\":\"number\"}}}}}"
+                    }
+                }
+            }
+        }
+    ],
+    "properties": [
+        {
+            "name": "Mqtt.local-mqtt.Broker_URL",
+            "type": "string",
+            "value": "tcp://10.0.0.19:1883"
+        },
+        {
+            "name": "Mqtt.local-mqtt.Username",
+            "type": "string",
+            "value": ""
+        },
+        {
+            "name": "Mqtt.local-mqtt.Password",
+            "type": "string",
+            "value": "SECRET:t9M2cdCoIWjt2FPRNWB1TQ=="
+        },
+        {
+            "name": "Mqtt.local-mqtt.Encryption_Mode",
+            "type": "string",
+            "value": "None"
+        },
+        {
+            "name": "Messaging.cloud-tcm.Connection_URL",
+            "type": "string",
+            "value": "wss://01c9s3v8d93kxexkk1sd4c4c90-apps.eu.messaging.cloud.tibco.com/channel"
+        },
+        {
+            "name": "Messaging.cloud-tcm.Authentication_Key",
+            "type": "string",
+            "value": "SECRET:AmZ5lp49hSHgQGvETA6wER1gEThBTF3Fg25BeuXzw5ApdBOKE54DmChw69FIrW2S"
+        },
+        {
+            "name": "Messaging.cloud-tcm.Timeout",
+            "type": "float64",
+            "value": 10
+        },
+        {
+            "name": "Messaging.cloud-tcm.AutoReconnectAttempts",
+            "type": "float64",
+            "value": 25
+        },
+        {
+            "name": "Messaging.cloud-tcm.AutoReconnectMaxDelay",
+            "type": "float64",
+            "value": 5
+        }
+    ],
+    "connections": {
+        "29835fb0-bd8f-11ea-b857-510c465aae21": {
+            "id": "29835fb0-bd8f-11ea-b857-510c465aae21",
+            "name": "cloud-tcm",
+            "ref": "#tcm",
+            "settings": {
+                "name": "cloud-tcm",
+                "description": "cloud-tcm",
+                "url": "=$property[\"Messaging.cloud-tcm.Connection_URL\"]",
+                "authKey": "=$property[\"Messaging.cloud-tcm.Authentication_Key\"]",
+                "timeout": "=$property[\"Messaging.cloud-tcm.Timeout\"]",
+                "autoReconnectAttempts": "=$property[\"Messaging.cloud-tcm.AutoReconnectAttempts\"]",
+                "autoReconnectMaxDelay": "=$property[\"Messaging.cloud-tcm.AutoReconnectMaxDelay\"]"
+            }
+        }
+    },
+    "contrib": "W3sicmVmIjoiZ2l0LnRpYmNvLmNvbS9naXQvcHJvZHVjdC9pcGFhcy93aS1tcXR0LmdpdC9NcXR0IiwiczNsb2NhdGlvbiI6IlRpYmNvL01xdHQifSx7InJlZiI6ImdpdC50aWJjby5jb20vZ2l0L3Byb2R1Y3QvZmxvZ28tbWVzc2FnaW5nLmdpdC9NZXNzYWdpbmciLCJzM2xvY2F0aW9uIjoiVGliY28vTWVzc2FnaW5nIn0seyJyZWYiOiJnaXRodWIuY29tL3Byb2plY3QtZmxvZ28vY29udHJpYi9hY3Rpdml0eS9sb2ciLCJzM2xvY2F0aW9uIjoie1VTRVJJRH0vRGVmYXVsdC9hY3Rpdml0eS9sb2cifV0=",
+    "fe_metadata": "UEsDBAoAAAAIAJBS5FCrqSRGFQAAABMAAAAIAAAAYXBwLmpzb26rViopykxPTy1yy8kvL1ayio6tBQBQSwECFAAKAAAACACQUuRQq6kkRhUAAAATAAAACAAAAAAAAAAAAAAAAAAAAAAAYXBwLmpzb25QSwUGAAAAAAEAAQA2AAAAOwAAAAAA"
+}
